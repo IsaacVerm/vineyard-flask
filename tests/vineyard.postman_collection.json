@@ -1,0 +1,304 @@
+{
+	"info": {
+		"_postman_id": "c994ca56-c619-4e53-aad7-ae0137e48f01",
+		"name": "vineyard",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/spray",
+			"item": [
+				{
+					"name": "should spray",
+					"item": [
+						{
+							"name": "/spray - threshold exceeded + sprayed long time ago",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "af957117-8ba9-4e05-8445-5e8c158183ab",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}:{{port}}/spray?predictionPercentageThreshold=20&daysNotSprayedThreshold=200",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"spray"
+									],
+									"query": [
+										{
+											"key": "predictionPercentageThreshold",
+											"value": "20"
+										},
+										{
+											"key": "daysNotSprayedThreshold",
+											"value": "200"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ba31aba6-b96e-4d70-84d6-f8da0b927909",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "73748544-27a6-4adf-a3a6-9156cb2c6388",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('should say spray', function () {",
+									"    pm.expect(pm.response.json()['spray']).to.be.true",
+									"})"
+								]
+							}
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "should not spray",
+					"item": [
+						{
+							"name": "/spray - threshold exceeded + sprayed short time ago",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}:{{port}}/spray?predictionPercentageThreshold=20&daysNotSprayedThreshold=500",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"spray"
+									],
+									"query": [
+										{
+											"key": "predictionPercentageThreshold",
+											"value": "20"
+										},
+										{
+											"key": "daysNotSprayedThreshold",
+											"value": "500"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/spray - threshold not exceeded + sprayed long time ago",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}:{{port}}/spray?predictionPercentageThreshold=99&daysNotSprayedThreshold=1",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"spray"
+									],
+									"query": [
+										{
+											"key": "predictionPercentageThreshold",
+											"value": "99"
+										},
+										{
+											"key": "daysNotSprayedThreshold",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/spray - threshold not exceeded + sprayed short time ago",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}:{{port}}/spray?predictionPercentageThreshold=99&daysNotSprayedThreshold=1000",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"spray"
+									],
+									"query": [
+										{
+											"key": "predictionPercentageThreshold",
+											"value": "99"
+										},
+										{
+											"key": "daysNotSprayedThreshold",
+											"value": "1000"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "122553c1-2997-424c-b101-6ac3ff7c47d7",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "6d932c90-dd17-41a3-b69f-0ccd0bb4b975",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('should say do not spray', function () {",
+									"    pm.expect(pm.response.json()['spray']).to.be.false",
+									"})"
+								]
+							}
+						}
+					],
+					"_postman_isSubFolder": true
+				}
+			]
+		},
+		{
+			"name": "/output/predictions",
+			"item": [
+				{
+					"name": "/output/predictions - request for json",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f1452fed-6d1f-4a77-b004-e77d17c961aa",
+								"exec": [
+									"pm.test('returns json', function () {",
+									"    const jsonHeader = pm.response.headers.find(function(header) {",
+									"        return header == \"application/json\"",
+									"    })",
+									"    ",
+									"    pm.expect(jsonHeader).to.exist",
+									"    ",
+									"})",
+									"",
+									"pm.test('returns moment, prediction_boolean and prediction_percentage', function () {",
+									"    prediction_variables = Object.keys(pm.response.json()[0])",
+									"    ",
+									"    pm.expect(prediction_variables).to.have.members(['moment','prediction_boolean','prediction_percentage'])",
+									"})",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}:{{port}}/output/predictions",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"output",
+								"predictions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/output/predictions - request for html",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "77eaf75e-a68c-439e-a88b-e3e79d92f5f0",
+								"exec": [
+									"pm.test('returns html', function () {",
+									"    const jsonHeader = pm.response.headers.find(function(header) {",
+									"        return header == \"text/html; charset=utf-8\"",
+									"    })",
+									"    ",
+									"    pm.expect(jsonHeader).to.exist",
+									"    ",
+									"})",
+									"",
+									"pm.test('html contains table', function () {",
+									"    pm.expect(pm.response.text()).to.contain('</table>')",
+									"})",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "text/html",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}:{{port}}/output/predictions",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"output",
+								"predictions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
