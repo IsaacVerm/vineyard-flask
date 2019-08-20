@@ -29,6 +29,8 @@ pip freeze > requirements.txt
 
 ## Test data
 
+### Seeding
+
 Seed test data:
 
 ```
@@ -37,6 +39,10 @@ touch vineyard.db
 sqlite3 vineyard.db < create-tables.sql
 sqlite3 vineyard.db < insert-test-data.sql
 ```
+
+The sqlite CLI is [pretty simple](https://sqlite.org/cli.html). All you need to check if the seeding was succesful are the commands below.
+
+### Most importants sqlite commands
 
 Check state database and tables (after creation database):
 
